@@ -56,6 +56,13 @@ def do_coco_evaluation(
             file_path = f.name
             if output_folder:
                 file_path = os.path.join(output_folder, iou_type + ".json")
+            ### UPDATE EVALUATION PER CLASS
+            for catId in dataset.coco.getCatIds():
+                res = evaluate_predictions_on_coco(
+                    dataset.coco, coco_results[iou_type], file_path, iou_type, catId
+                )
+                results.update(res)
+            ### UPDATE EVALUATION PER CLASS
             res = evaluate_predictions_on_coco(
                 dataset.coco, coco_results[iou_type], file_path, iou_type
             )
@@ -303,7 +310,7 @@ def evaluate_box_proposals(
 
 
 def evaluate_predictions_on_coco(
-    coco_gt, coco_results, json_result_file, iou_type="bbox"
+    coco_gt, coco_results, json_result_file, iou_type="bbox", catId=None  ### UPDATE EVALUATION PER CLASS
 ):
     import json
 
@@ -317,6 +324,10 @@ def evaluate_predictions_on_coco(
 
     # coco_dt = coco_gt.loadRes(coco_results)
     coco_eval = COCOeval(coco_gt, coco_dt, iou_type)
+    ### UPDATE EVALUATION PER CLASS
+    if catId:
+        coco_eval.params.catIds = [catId]
+    ### UPDATE EVALUATION PER CLASS
     coco_eval.evaluate()
     coco_eval.accumulate()
     coco_eval.summarize()
@@ -358,10 +369,17 @@ class COCOResults(object):
         assert isinstance(coco_eval, COCOeval)
         s = coco_eval.stats
         iou_type = coco_eval.params.iouType
+        catIds = coco_eval.params.catIds  ### UPDATE EVALUATION PER CLASS
+        ### UPDATE EVALUATION PER CLASS
         res = self.results[iou_type]
         metrics = COCOResults.METRICS[iou_type]
-        for idx, metric in enumerate(metrics):
-            res[metric] = s[idx]
+        if len(catIds) is 1:
+            res[catIds[0]] = {}
+            for idx, metric in enumerate(metrics):
+                res[catIds[0]][metric] = s[idx]
+        else:
+            for idx, metric in enumerate(metrics):
+                res[metric] = s[idx]
 
     def __repr__(self):
         # TODO make it pretty

@@ -156,6 +156,62 @@ class DatasetCatalog(object):
                 "img_dir": 'watercolor/JPEGImages',
                 "ann_file": 'watercolor/instances_test.json',
         },
+        'itri_train_cocostyle': {
+                "img_dir": 'ITRI_dataset/images',
+                "ann_file": 'ITRI_dataset/annotations/itri_train.json',
+        },
+        'itri_val_cocostyle': {
+                "img_dir": 'ITRI_dataset/images',
+                "ann_file": 'ITRI_dataset/annotations/itri_val.json',
+        },
+        'cityscapes_4_train_cocostyle': {
+                "img_dir": "cityscapes_4/images",
+                "ann_file": "cityscapes_4/annotations/cityscapes_4_train.json"
+        },
+        'cityscapes_4_val_cocostyle': {
+                "img_dir": "cityscapes_4/images",
+                "ann_file": "cityscapes_4/annotations/cityscapes_4_val.json"
+        },
+        'nthu_tokyo_train_cocostyle': {
+                "img_dir": 'NTHU_dataset/images',
+                "ann_file": 'NTHU_dataset/annotations/nthu_tokyo_train.json',
+        },
+        'nthu_taipei_train_cocostyle': {
+                "img_dir": 'NTHU_dataset/images',
+                "ann_file": 'NTHU_dataset/annotations/nthu_taipei_train.json',
+        },
+        'nthu_rome_train_cocostyle': {
+                "img_dir": 'NTHU_dataset/images',
+                "ann_file": 'NTHU_dataset/annotations/nthu_rome_train.json',
+        },
+        'nthu_rio_train_cocostyle': {
+                "img_dir": 'NTHU_dataset/images',
+                "ann_file": 'NTHU_dataset/annotations/nthu_rio_train.json',
+        },
+        # 'cross_city_taipei_train_cocostyle': {
+        #         "img_dir": 'NTHU_dataset/Taipei/images',
+        #         "ann_file": 'NTHU_dataset/Taipei/annotations/itri_train.json',
+        # },
+        # 'cross_city_taipei_cocostyle': {
+        #         "img_dir": 'NTHU_dataset/Taipei/images',
+        #         "ann_file": 'NTHU_dataset/Taipei/annotations/itri_val.json',
+        # },
+        # 'cross_city_tokyo_train_cocostyle': {
+        #         "img_dir": 'NTHU_dataset/Tokyo/images',
+        #         "ann_file": 'NTHU_dataset/Tokyo/annotations/itri_train.json',
+        # },
+        # 'cross_city_tokyo_cocostyle': {
+        #         "img_dir": 'NTHU_dataset/Tokyo/images',
+        #         "ann_file": 'NTHU_dataset/Tokyo/annotations/itri_val.json',
+        # },
+        # "itri_train": {
+        #     "data_dir": "ITRI_dataset/VOC2007",
+        #     "split": "train"
+        # },
+        # "itri_test": {
+        #     "data_dir": "ITRI_dataset/VOC2007",
+        #     "split": "test"
+        # },
     }
 
     @staticmethod
@@ -182,6 +238,18 @@ class DatasetCatalog(object):
                 factory="PascalVOCDataset",
                 args=args,
             )
+        elif "itri" in name:
+            data_dir = DatasetCatalog.DATA_DIR
+            attrs = DatasetCatalog.DATASETS[name]
+            args = dict(
+                data_dir=os.path.join(data_dir, attrs["data_dir"]),
+                split=attrs["split"],
+            )
+            return dict(
+                factory="ITRIDataset",
+                args=args,
+            )
+
         raise RuntimeError("Dataset not available: {}".format(name))
 
 

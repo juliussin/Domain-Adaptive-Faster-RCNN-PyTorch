@@ -67,6 +67,7 @@ class GeneralizedRCNN(nn.Module):
             losses.update(detector_losses)
             losses.update(proposal_losses)
             losses.update(da_losses)
+            # torch.cuda.empty_cache()
             return losses
 
         return result

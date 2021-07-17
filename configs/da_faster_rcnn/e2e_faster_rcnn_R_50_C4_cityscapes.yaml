@@ -1,7 +1,7 @@
 MODEL:
   META_ARCHITECTURE: "GeneralizedRCNN"
   WEIGHT: "catalog://ImageNetPretrained/MSRA/R-50"
-  DOMAIN_ADAPTATION_ON: True
+  DOMAIN_ADAPTATION_ON: False
   RPN:
     PRE_NMS_TOP_N_TEST: 6000
     POST_NMS_TOP_N_TEST: 1000
@@ -16,9 +16,7 @@ MODEL:
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 DATASETS:
-  TRAIN: ("cityscapes_fine_instanceonly_seg_train_cocostyle",)
-  SOURCE_TRAIN: ("cityscapes_fine_instanceonly_seg_train_cocostyle",)
-  TARGET_TRAIN: ("foggy_cityscapes_fine_instanceonly_seg_train_cocostyle",)
+  TRAIN: ("foggy_cityscapes_fine_instanceonly_seg_train_cocostyle",)
   TEST: ("foggy_cityscapes_fine_instanceonly_seg_val_cocostyle",)
 INPUT:
   MIN_SIZE_TRAIN: (600,)
@@ -33,4 +31,4 @@ SOLVER:
   IMS_PER_BATCH: 2
 TEST:
   IMS_PER_BATCH: 1
-TENSORBOARD_EXPERIMENT: 'logs/da'
+TENSORBOARD_EXPERIMENT: 'logs/oracle'
