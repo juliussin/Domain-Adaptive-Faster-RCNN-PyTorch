@@ -16,10 +16,10 @@ MODEL:
 DATALOADER:
   SIZE_DIVISIBILITY: 32
 DATASETS:
-  TRAIN: ("cityscapes_4_train_cocostyle",)
-  SOURCE_TRAIN: ("cityscapes_4_train_cocostyle",)
-  TARGET_TRAIN: ("itri_train_cocostyle",)
-  TEST: ("itri_val_cocostyle",)
+  TRAIN: ("itri_train_cocostyle",)
+  SOURCE_TRAIN: ("itri_train_cocostyle",)
+  TARGET_TRAIN: ("cityscapes_4_train_cocostyle",)
+  TEST: ("cityscapes_4_val_cocostyle",)
 INPUT:
   MIN_SIZE_TRAIN: (600,)
   MAX_SIZE_TRAIN: 1200
