@@ -33,4 +33,4 @@ SOLVER:
   IMS_PER_BATCH: 2
 TEST:
   IMS_PER_BATCH: 1
-TENSORBOARD_EXPERIMENT: 'logs/da_cityscapes_to_itri'
+TENSORBOARD_EXPERIMENT: 'logs/da_itri_to_cityscapes'
