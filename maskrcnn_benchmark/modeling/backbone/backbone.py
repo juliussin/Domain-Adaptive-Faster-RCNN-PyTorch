@@ -8,6 +8,38 @@ from maskrcnn_benchmark.modeling.make_layers import conv_with_kaiming_uniform
 from . import fpn as fpn_module
 from . import resnet
 
+
+# VGG-16-FPN-RETINANET output:
+# [B, 256, 84, 168]
+# [B, 256, 42, 84]
+# [B, 256, 21, 42]
+# [B, 256, 11, 21]
+# [B, 256, 6, 11]
+@registry.BACKBONES.register("VGG-16-FPN-RETINANET")
+def build_vgg_fpn_backbone(cfg):
+    body = VGG(depth=16, with_last_pool=True, frozen_stages=2)
+    in_channels_stage2 = 128    # default: cfg.MODEL.RESNETS.RES2_OUT_CHANNELS (256)
+    out_channels = 256          # default: cfg.MODEL.RESNETS.BACKBONE_OUT_CHANNELS (256)
+    in_channels_p6p7 = in_channels_stage2 * 4 if cfg.MODEL.RETINANET.USE_C5 \
+        else out_channels
+    fpn = fpn_module.FPN(
+        in_channels_list=[
+            0,
+            0,
+            in_channels_stage2 * 2,
+            in_channels_stage2 * 4,
+            in_channels_stage2 * 4, # in_channels_stage2 * 8
+        ],
+        out_channels=out_channels,
+        conv_block=conv_with_kaiming_uniform(
+            cfg.MODEL.FPN.USE_GN, cfg.MODEL.FPN.USE_RELU
+        ),
+        top_blocks=fpn_module.LastLevelP6P7(in_channels_p6p7, out_channels),
+    )
+    model = nn.Sequential(OrderedDict([("body", body), ("fpn", fpn)]))
+    model.out_channels = out_channels
+    return model
+
 @registry.BACKBONES.register("R-50-C4")
 @registry.BACKBONES.register("R-50-C5")
 @registry.BACKBONES.register("R-101-C4")
